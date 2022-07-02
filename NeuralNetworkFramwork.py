@@ -4,11 +4,14 @@ import numpy as np
 class NeuralNetworkFramework:
     def __init__(self):
         self.weights = {
-
+            
         }
         self.biases = {
 
         }
+
+    def sigmoid(x):
+        return 1/(1 + np.exp(-x))
 
     def loss(actual, expected):
         return 0.5 * (actual - expected) ** 2
