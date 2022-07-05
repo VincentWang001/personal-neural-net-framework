@@ -17,7 +17,7 @@ class NeuralNetworkFramework:
             2: np.random.rand(16),
             3: np.random.rand(10)
         }
-        self.learning_rate = 0.01
+        self.learning_rate = 0.1
         self.num_layers = 3
         self.batch_size = 64
     
