@@ -18,3 +18,9 @@ def d_sigmoid(x):
 #loss function
 def loss(actual, expected):
     return sum(0.5 * (actual - expected) ** 2)
+
+def get_prediction(output_vec):
+    return np.argmax(output_vec)
+
+def get_minibatch(batch_size):
+    return np.random.choice(range(60000), batch_size, replace=False)
