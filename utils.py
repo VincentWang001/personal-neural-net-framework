@@ -8,6 +8,7 @@ def one_hot(i):
 
 #sigmoid function
 def sigmoid(x):
+    # print('sigmoid: ', 1/(1 + np.exp(-x)))
     return 1/(1 + np.exp(-x))
 
 #derivative of sigmoid function  
@@ -15,6 +16,11 @@ def d_sigmoid(x):
     sig = sigmoid(x)
     return sig * (1 - sig)
 
+def relu(x):
+    return np.maximum(0, x)
+
+def d_relu(x):
+    return (x > 0) * 1
 #loss function
 def loss(actual, expected):
     return sum(0.5 * (actual - expected) ** 2)

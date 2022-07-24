@@ -13,13 +13,15 @@ class NeuralNetworkFramework:
 
         #biases
         self.b = {
-            1: np.random.rand(16),
-            2: np.random.rand(16),
-            3: np.random.rand(10)
+            1: np.random.rand(16) / 100,
+            2: np.random.rand(16) / 100,
+            3: np.random.rand(10) / 100
         }
-        self.learning_rate = 0.1
+        self.learning_rate = 0.01
         self.num_layers = 3
-        self.batch_size = 64
+        self.batch_size = 1
+        self.activation = utils.relu
+        self.d_activation = utils.d_relu
     
     #for 1 image
     def train(self, input_vec, digit):
@@ -28,11 +30,12 @@ class NeuralNetworkFramework:
         z = {}
         a = {}
         z[1] = self.W[1] @ input_vec + self.b[1] # 16 x 1
-        a[1] = utils.sigmoid(z[1]) # 16 x 1
+        a[1] = self.activation(z[1]) # 16 x 1
         z[2] = self.W[2] @ a[1] + self.b[2] # 16 x 1
-        a[2] = utils.sigmoid(z[2]) # 16 x 1
+        a[2] = self.activation(z[2]) # 16 x 1
         z[3] = self.W[3] @ a[2] + self.b[3] # 10 x 1
-        a[3] = utils.sigmoid(z[3]) # 10 x 1, output
+        a[3] = z[3]#self.activation(z[3]) # 10 x 1, output
+        print('a[3]: ', a[3])
         l = utils.loss(a[3], y)
         #backward pass
         dz = {}
@@ -42,22 +45,25 @@ class NeuralNetworkFramework:
 
         #layer 3
         da[3] = a[3] - y #dJ/do
-        dz[3] = da[3] * utils.d_sigmoid(z[3]) #dJ/do * do/dz[3]
+        dz[3] = da[3]# * self.d_activation(z[3]) #dJ/do * do/dz[3]
         db[3] = dz[3]
         dW[3] = np.outer(dz[3], a[2])
 
         #layer 2
         da[2] = dW[3].T @ dz[3]
-        dz[2] = da[2] * utils.d_sigmoid(z[2])
+        dz[2] = da[2] * self.d_activation(z[2])
         db[2] = dz[2]
         dW[2] = np.outer(dz[2], a[1])
 
         #layer 1
         da[1] = dW[2].T @ dz[2]
-        dz[1] = da[1] * utils.d_sigmoid(z[1])
+        dz[1] = da[1] * self.d_activation(z[1])
         db[1] = dz[1]
         dW[1] = np.outer(dz[1], input_vec)
-
+        print("dW[3]: ", dW[3])
+        #print("dW[2]: ", dW[2])
+        #print("db[3]:", db[3])
+        print("W[3]:", self.W[3])
         return (dW, db, l)
     
     def update_weights_and_biases(self, dW, db):
